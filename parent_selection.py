@@ -1,10 +1,17 @@
 import constants
-import evaluation
 
 import numpy as np
 
 
 def parent_selection_function(individuals_vector, distance_vector, n_cities):
+    """
+    This function select the parents by tournament. Configuration parameters can be found in constants.py
+    :param individuals_vector: vector containing the different vector permuted
+    :param distance_vector: vector with the distance of the permuted vectors
+    :param n_cities: number of cities (number of points)
+    :return: parent_vector: vector with the parent selection
+    :return: parent_distance: vector with the parent distance
+    """
 
     # initialize the variables
     parent_vector = np.zeros((constants.n_permutations, n_cities, constants.dimension))
@@ -13,7 +20,8 @@ def parent_selection_function(individuals_vector, distance_vector, n_cities):
     # tournament loop
     for i in range(constants.n_tournaments):
         # select a number of individuals with uniform distribution
-        tournament_individuals = np.random.random_integers(0, constants.n_permutations - 1, size=constants.n_individuals)
+        tournament_individuals = np.random.random_integers(0, constants.n_permutations - 1,
+                                                           size=constants.n_individuals)
 
         # Select the distance of those individuals
         tournament_distance = np.zeros(constants.n_individuals)
