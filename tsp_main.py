@@ -10,7 +10,7 @@ import numpy as np
 
 def main():
 
-    n_cities = 5
+    n_cities = 6
 
     # create the initial vector with cities
     vector = rand_vect.random_vector_generator_function(n_cities)
