@@ -20,7 +20,7 @@ def parent_selection_function(individuals_vector, distance_vector, n_cities):
     # tournament loop
     for i in range(constants.n_tournaments):
         # select a number of individuals with uniform distribution
-        tournament_individuals = np.random.random_integers(0, constants.n_permutations - 1,
+        tournament_individuals = np.random.random_integers(0, constants.n_permutations-1,
                                                            size=constants.n_individuals)
 
         # Select the distance of those individuals

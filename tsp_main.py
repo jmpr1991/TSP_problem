@@ -31,6 +31,9 @@ def main():
 
     # crossover
     child_vector, child_distance = crossover.crossover_function(parent_vector, parent_distance, n_cities)
+    print("child\n")
+    print(child_vector)
+    print(child_distance)
 
 if __name__ == "__main__":
     main()

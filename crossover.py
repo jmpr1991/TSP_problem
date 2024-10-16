@@ -1,4 +1,5 @@
 import constants
+import evaluation
 
 import numpy as np
 
@@ -8,7 +9,8 @@ def crossover_function(parent_vector, parent_distance, n_cities):
     :param parent_vector:
     :param parent_distance:
     :param n_cities:
-    :return:
+    :return: child_vector: vector with the parents recombination
+    :return: child_distance: vector with the child distances
     """
 
     # initialize the variables
@@ -28,11 +30,9 @@ def crossover_function(parent_vector, parent_distance, n_cities):
         # perform the crossover if the following condition is met
         if crossover_prob_i <= constants.pc:
             # create the first child
-            child_vector[n_children, constants.s0-1:constants.sf, :] = parent_vector[parents_crossover[0],
-                                                                         constants.s0-1:constants.sf, :]
+            child_vector[n_children, constants.s0-1:constants.sf, :] = parent_vector[parents_crossover[0], constants.s0-1:constants.sf, :]
 
             # save the remaining elements in a vector
-            #left_elements = parent_vector[parents_crossover[0], [range(0,constants.s0-1), range(constants.sf,n_cities)], :]
             left_elements = parent_vector[parents_crossover[0],
                             np.concatenate(([i for i in range(0,constants.s0-1)], [i for i in range(constants.sf, n_cities)])), :]
 
@@ -49,7 +49,72 @@ def crossover_function(parent_vector, parent_distance, n_cities):
             # iterate over last free elements
             if last_elements:
                 for i in range(np.size(last_elements, 0)):
-                    index = np.where(child_vector[i, :, :] == 0)[0][0]
+                    index = np.where(child_vector[n_children, :, :] == 0)[0][0]
                     child_vector[n_children, int(index), :] = last_elements[i]
 
-def partially_mapped_rossover
+            # evaluate the distance
+            child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
+
+            # go to the next child
+            n_children = n_children + 1
+
+            # break condition
+            if n_children == constants.n_permutations:
+                break
+
+            # create the second child
+            child_vector[n_children, constants.s0-1:constants.sf, :] = parent_vector[parents_crossover[1], constants.s0-1:constants.sf, :]
+
+            # save the remaining elements in a vector
+            left_elements = parent_vector[parents_crossover[1],
+                            np.concatenate(([i for i in range(0,constants.s0-1)], [i for i in range(constants.sf, n_cities)])), :]
+
+            # iterate the pending elements
+            #index = np.zeros(np.size(left_elements, axis=0))
+            last_elements = []
+            for i in range(np.size(left_elements,0)):
+                if left_elements[i]  not in parent_vector[parents_crossover[0], constants.s0-1:constants.sf-1, :]:
+                    index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i])[0][0]
+                    child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index),:]
+                else:
+                    last_elements.append(left_elements[i])
+
+            # iterate over last free elements
+            if last_elements:
+                for i in range(np.size(last_elements, 0)):
+                    index = np.where(child_vector[n_children, :, :] == 0)[0][0]
+                    child_vector[n_children, int(index), :] = last_elements[i]
+
+            # evaluate the distance
+            child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
+
+            # go to the next child
+            n_children = n_children + 1
+
+            # break condition
+            if n_children == constants.n_permutations:
+                break
+
+        # clone the parents if the following condition is met
+        else:
+            #clone parent 1
+            child_vector[n_children, :, :] = parent_vector[parents_crossover[0], :, :]
+            child_distance[n_children] = parent_distance[parents_crossover[0]]
+            n_children = n_children + 1
+            # break condition
+            if n_children == constants.n_permutations:
+                break
+
+            # clone parent 2
+            child_vector[n_children, :, :] = parent_vector[parents_crossover[1], :, :]
+            child_distance[n_children] = parent_distance[parents_crossover[1]]
+            n_children = n_children + 1
+            # break condition
+            if n_children == constants.n_permutations:
+                break
+
+
+
+
+
+    return child_vector, child_distance

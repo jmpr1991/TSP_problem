@@ -7,7 +7,7 @@ dimension = 2      # space dimension
 square_size = 1  # size of square in where the vectors are located
 
 # Initialization
-n_permutations = 4  # number of permutations
+n_permutations = 6 # number of permutations
 
 # parent selection
 n_tournaments = n_permutations  # number of tournaments, lambda in the literature
