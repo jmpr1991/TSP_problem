@@ -5,6 +5,7 @@ import initialization
 import parent_selection
 import crossover
 import mutation
+import survival_elitism
 
 import numpy as np
 
@@ -19,28 +20,35 @@ def main():
     print(vector)
 
     # initialize the population shuffling the vector with cities
-    init_vector, init_distance = initialization.initialization_function(vector, n_cities)
+    parent_vector, parent_distance = initialization.initialization_function(vector, n_cities)
     print("primera poblacion")
-    print(init_vector)
-    print(init_distance)
+    print(parent_vector)
+    print(parent_distance)
 
     # parent selection
-    parent_vector, parent_distance = parent_selection.parent_selection_function(init_vector, init_distance, n_cities)
+    parent_sel_vector, parent_sel_distance = parent_selection.parent_selection_function(parent_vector, parent_distance, n_cities)
     print("padre\n")
     print(parent_vector)
     print(parent_distance)
 
     # crossover
-    child_vector, child_distance = crossover.crossover_function(parent_vector, parent_distance, n_cities)
+    child_vector, child_distance = crossover.crossover_function(parent_sel_vector, parent_sel_distance, n_cities)
     print("child\n")
     print(child_vector)
     print(child_distance)
 
     # mutation
     child_mutated_vector, child_mutated_distance = mutation.mutation_function(child_vector, child_distance, n_cities)
-    print("child\n")
+    print("mutation\n")
     print(child_mutated_vector)
     print(child_mutated_distance)
+
+    # survival selections and elitism
+    parent_vector, parent_distance =survival_elitism.survival_elitism_function(child_mutated_vector, child_mutated_distance, parent_vector, parent_distance)
+    print("selection\n")
+    print(parent_vector)
+    print(parent_distance)
+
 
 if __name__ == "__main__":
     main()
