@@ -24,5 +24,6 @@ def survival_elitism_function(child_mutated_vector, child_mutated_distance, pare
     # create the new generation without elitism
     else:
         parent_vector = child_mutated_vector
+        parent_distance = child_mutated_distance
 
     return parent_vector, parent_distance

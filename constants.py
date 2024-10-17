@@ -21,3 +21,5 @@ pc = 0.5 # crossover probability
 
 # mutation
 pm = 0.5 # probability of mutation
+
+# termination condition

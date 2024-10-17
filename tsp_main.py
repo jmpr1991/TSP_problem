@@ -12,7 +12,7 @@ import numpy as np
 
 def main():
 
-    n_cities = 6
+    n_cities = 10
 
     # create the initial vector with cities
     vector = rand_vect.random_vector_generator_function(n_cities)
@@ -28,8 +28,8 @@ def main():
     # parent selection
     parent_sel_vector, parent_sel_distance = parent_selection.parent_selection_function(parent_vector, parent_distance, n_cities)
     print("padre\n")
-    print(parent_vector)
-    print(parent_distance)
+    print(parent_sel_vector)
+    print(parent_sel_distance)
 
     # crossover
     child_vector, child_distance = crossover.crossover_function(parent_sel_vector, parent_sel_distance, n_cities)
@@ -44,7 +44,7 @@ def main():
     print(child_mutated_distance)
 
     # survival selections and elitism
-    parent_vector, parent_distance =survival_elitism.survival_elitism_function(child_mutated_vector, child_mutated_distance, parent_vector, parent_distance)
+    parent_vector, parent_distance = survival_elitism.survival_elitism_function(child_mutated_vector, child_mutated_distance, parent_vector, parent_distance)
     print("selection\n")
     print(parent_vector)
     print(parent_distance)
