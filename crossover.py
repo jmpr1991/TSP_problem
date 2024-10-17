@@ -17,15 +17,23 @@ def crossover_function(parent_vector, parent_distance, n_cities):
     child_vector = np.zeros((constants.n_permutations, n_cities, constants.dimension))
     child_distance = np.zeros(constants.n_permutations)
     n_children = 0
+    list_parents = [i for i in range(constants.n_permutations)] # list parents for crossover
 
     # loop to create the next generation
     while n_children < constants.n_permutations:
         #generate a crossover probability with uniform distribution
         crossover_prob_i = np.random.uniform(0.0,1.0)
 
-        #select the parents for crossover
-        parents_crossover = np.random.random_integers(0, constants.n_permutations - 1,
-                                                      size=constants.n_individuals)
+        #select different couple of parents for crossover
+        #parents_crossover = np.random.random_integers(0, constants.n_permutations - 1,
+                                                     # size=constants.n_individuals)
+
+        #for i in range(constants.n_tournaments):
+            # select 2 random individuals within the list and avoiding repetition
+        parents_crossover = np.zeros(constants.n_individuals, int)
+        for k in range(constants.n_individuals):
+            parents_crossover[k] = np.random.choice(list_parents)
+            list_parents.remove(int(parents_crossover[k]))
 
         # perform the crossover if the following condition is met
         if crossover_prob_i <= constants.pc:

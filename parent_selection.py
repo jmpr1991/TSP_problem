@@ -16,12 +16,18 @@ def parent_selection_function(individuals_vector, distance_vector, n_cities):
     # initialize the variables
     parent_vector = np.zeros((constants.n_permutations, n_cities, constants.dimension))
     parent_distance = np.zeros(constants.n_permutations)
+    list_parents = [i for i in range(constants.n_permutations)]
 
     # tournament loop
     for i in range(constants.n_tournaments):
-        # select a number of individuals with uniform distribution
-        tournament_individuals = np.random.random_integers(0, constants.n_permutations-1,
-                                                           size=constants.n_individuals)
+        # select 2 random individuals within the list and avoiding repetition
+        tournament_individuals = np.zeros(constants.n_individuals, int)
+        for k in range(constants.n_individuals):
+            tournament_individuals[k] = int(np.random.choice(list_parents))
+            list_parents.remove(int(tournament_individuals[k]))
+            # create a new list if list is empty. This is done to because each individual has 2 tournaments
+            if not list_parents:
+                list_parents = [i for i in range(constants.n_permutations)]
 
         # Select the distance of those individuals
         tournament_distance = np.zeros(constants.n_individuals)
@@ -33,7 +39,7 @@ def parent_selection_function(individuals_vector, distance_vector, n_cities):
         index = np.where(tournament_distance == min_distance)
 
         # build the parent vector and parent distance
-        parent_vector[i, :, :] = individuals_vector[index[0][0], :, :]
+        parent_vector[i, :, :] = individuals_vector[tournament_individuals[index[0][0]], :, :]
         parent_distance[i] = min_distance
 
     return parent_vector, parent_distance
