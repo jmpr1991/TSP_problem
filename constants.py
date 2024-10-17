@@ -16,5 +16,8 @@ n_individuals = 2  # number of individuals participating in the tournament
 
 # crossover
 pc = 0.5 # crossover probability
-s0 = 2 # first element of the segment used in the crossover function
-sf = 4 # last element of the segment used in the crossover function
+#s0 = 2 # first element of the segment used in the crossover function
+#sf = 4 # last element of the segment used in the crossover function
+
+# mutation
+pm = 0.5 # probability of mutation

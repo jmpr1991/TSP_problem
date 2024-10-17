@@ -1,7 +1,6 @@
 import constants
 
 import numpy as np
-import os
 
 
 def random_vector_generator_function(n_points):
@@ -18,9 +17,6 @@ def random_vector_generator_function(n_points):
     for i in range(n_points):
         vector[i] = np.random.rand(2) * constants.square_size
 
-    # create new file with the vector
-    # f = open(f'vector_cities_{n_points}', 'a')
-    # f.write(str(vector))
 
     return vector
 

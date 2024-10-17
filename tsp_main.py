@@ -4,6 +4,7 @@ import evaluation
 import initialization
 import parent_selection
 import crossover
+import mutation
 
 import numpy as np
 
@@ -34,6 +35,12 @@ def main():
     print("child\n")
     print(child_vector)
     print(child_distance)
+
+    # mutation
+    child_mutated_vector, child_mutated_distance = mutation.mutation_function(child_vector, child_distance, n_cities)
+    print("child\n")
+    print(child_mutated_vector)
+    print(child_mutated_distance)
 
 if __name__ == "__main__":
     main()
