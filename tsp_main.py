@@ -25,6 +25,8 @@ def main():
     print(parent_vector)
     print(parent_distance)
 
+
+
     # parent selection
     parent_sel_vector, parent_sel_distance = parent_selection.parent_selection_function(parent_vector, parent_distance, n_cities)
     print("padre\n")
