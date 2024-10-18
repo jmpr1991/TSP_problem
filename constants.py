@@ -23,5 +23,4 @@ pc = 0.5 # crossover probability
 pm = 0.5 # probability of mutation
 
 # termination condition
-delta_best_distance = 0.01 # difference between current generation and new generation
 n_generations = 1000 #number of generations
