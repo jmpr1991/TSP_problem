@@ -17,6 +17,7 @@ def initialization_function(vector, n_cities):
     init_vector = np.zeros((constants.n_permutations, n_cities, constants.dimension))
     init_distance = np.zeros(constants.n_permutations)
 
+    # shuffle the input vector and create permutations
     for i in range(constants.n_permutations):
         np.random.shuffle(vector)
         init_vector[i, :, :] = vector
