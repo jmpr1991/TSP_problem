@@ -17,6 +17,8 @@ def main():
     all_parent_distances = np.zeros((constants.n_executions, constants.n_permutations))
     all_min_distances = []
     all_mean_distances = []
+    all_std_distances = []
+    total_generations = []
 
     for execution_i in range(constants.n_executions):
         # create the initial vector with cities
@@ -28,6 +30,7 @@ def main():
         # initialize variables
         min_distance = []
         mean_distance = []
+        std_distance = []
         number_generations = 0
         termination_generation = 0
 
@@ -49,6 +52,7 @@ def main():
             # compute the min distance and mean distance
             min_distance.append(min(new_parent_distance))
             mean_distance.append(np.mean(new_parent_distance))
+            std_distance.append(np.std(new_parent_distance))
 
             # compute termination condition if best individual does not change for 100 generations
             if (min(new_parent_distance) - min(parent_distance)) == 0:
@@ -68,14 +72,34 @@ def main():
         all_parent_distances[execution_i, :] = parent_distance
         all_min_distances.append(min_distance)
         all_mean_distances.append(mean_distance)
+        all_std_distances.append(std_distance)
+        total_generations.append(number_generations -1)
 
 
     print("min distance")
     print(np.array(all_min_distances[0]))
     print(np.array(all_mean_distances[0]))
 
-    plt.plot(np.array(all_min_distances[1]))
-    plt.plot(np.array(all_mean_distances[1]))
+    print('VAMM')
+    vam = np.zeros(constants.n_executions)
+    for i in range(constants.n_executions):
+        vam[i] = float(min(np.array(all_min_distances[i])))
+
+    vamm = sum(vam)/constants.n_executions
+    vamm_std = np.std(vam)
+    print(vamm, vamm_std)
+
+    # print the convergence of the best individual
+    plt.plot(np.array(all_min_distances[0]),linewidth=0.5)
+    plt.plot(np.array(all_mean_distances[0]), linewidth=0.5)
+    plt.fill_between([i for i in range(np.size(np.array(all_mean_distances[0])))],
+                     np.array(all_mean_distances[0]) - np.array(all_std_distances[0]),
+                     np.array(all_mean_distances[0]) + np.array(all_std_distances[0]), alpha=0.3, label='error bar')
+    #plt.errorbar([i for i in range(np.size(np.array(all_mean_distances[0])))], y=np.array(all_mean_distances[0]), yerr=np.array(all_std_distances[0]))
+    plt.title('Progress plot of the best individual of each generation')
+    plt.xlabel('Generation')
+    plt.ylabel('Adaptation function (distance)')
+    plt.legend(['best individual', 'population mean', 'error band'])
     plt.show()
 
 if __name__ == "__main__":

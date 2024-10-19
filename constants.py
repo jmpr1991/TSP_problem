@@ -5,8 +5,8 @@ This file contain the constants of the tsp problem
 import numpy as np
 
 #  randon_vector_generator constants
-n_executions = 2
-n_cities = 100
+n_executions = 2  #number of executions
+n_cities = 10  #number of cities
 dimension = 2      # space dimension
 square_size = 1  # size of square in where the vectors are located
 np.random.seed(2) #seed of the random function to avoid errors in the vector generator
