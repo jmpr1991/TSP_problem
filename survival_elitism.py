@@ -11,11 +11,11 @@ def survival_elitism_function(child_mutated_vector, child_mutated_distance, pare
     :param parent_vector: new generation vector
     :param parent_distance: new generation distance
     :return: new_parent_vector: new generation vector
-    :return: new generation distance
+    :return: new_parent_distance: new generation distance
     """
 
     #select the best individual of the  current population if this condition is met
-    if min(parent_distance) < max(child_mutated_distance):
+    if min(parent_distance) < min(child_mutated_distance):
         #select the best individual of the parent vector
         min_distance = min(parent_distance)
         index_best_individual = np.where(parent_distance == min_distance)[0][0]

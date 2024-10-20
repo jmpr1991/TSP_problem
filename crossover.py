@@ -6,9 +6,9 @@ import numpy as np
 def crossover_function(parent_vector, parent_distance, n_cities):
     """
     This function recombinates the different parent vectors with the Partially Mapped Crossover method
-    :param parent_vector:
-    :param parent_distance:
-    :param n_cities:
+    :param parent_vector: input vector
+    :param parent_distance: input distance
+    :param n_cities: vector size
     :return: child_vector: vector with the parents recombination
     :return: child_distance: vector with the child distances
     """
@@ -21,13 +21,14 @@ def crossover_function(parent_vector, parent_distance, n_cities):
 
     # loop to create the next generation
     while n_children < constants.n_permutations:
-        #generate a crossover probability with uniform distribution
+        # generate a crossover probability with uniform distribution
         crossover_prob_i = np.random.uniform(0.0,1.0)
 
         # generate the segment for crossover avoiding the edges
         s0 = np.random.randint(2,n_cities - 2)
         sf = np.random.randint(s0 + 1,n_cities - 1)
 
+        # select the parents to recombinate and delete them from the list to avoid repetition
         parents_crossover = np.zeros(constants.n_individuals, int)
         for k in range(constants.n_individuals):
             parents_crossover[k] = np.random.choice(list_parents)
