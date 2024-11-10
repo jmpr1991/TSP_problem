@@ -24,10 +24,6 @@ def crossover_function(parent_vector, parent_distance, n_cities):
         # generate a crossover probability with uniform distribution
         crossover_prob_i = np.random.uniform(0.0,1.0)
 
-        # generate the segment for crossover avoiding the edges
-        s0 = np.random.randint(2,n_cities - 2)
-        sf = np.random.randint(s0 + 1,n_cities - 1)
-
         # select the parents to recombinate and delete them from the list to avoid repetition
         parents_crossover = np.zeros(constants.n_individuals, int)
         for k in range(constants.n_individuals):
@@ -36,68 +32,27 @@ def crossover_function(parent_vector, parent_distance, n_cities):
 
         # perform the crossover if the following condition is met
         if crossover_prob_i <= constants.pc:
+
+            # generate the segment for crossover avoiding the edges
+            s0 = np.random.randint(2, n_cities - 2)
+            sf = np.random.randint(s0 + 1, n_cities - 1)
+
             # create the first child
             child_vector[n_children, s0-1:sf, :] = parent_vector[parents_crossover[0], s0-1:sf, :]
 
-            # save the remaining elements in a vector
-            left_elements = parent_vector[parents_crossover[0],
-                            np.concatenate(([i for i in range(0,s0-1)], [i for i in range(sf, n_cities)])), :]
+            child_vector[n_children, :, :] = pmx_crossover(parent_vector[parents_crossover[0], :, :],
+                                                           parent_vector[parents_crossover[1], :, :],
+                                                           s0, sf)
 
-            # iterate the pending elements
-            #index = np.zeros(np.size(left_elements, axis=0))
-            last_elements = []
-            for i in range(np.size(left_elements,0)):
-                if left_elements[i]  not in parent_vector[parents_crossover[1], s0-1:sf, :]:
-                    index = np.where(parent_vector[parents_crossover[1], :, :] == left_elements[i][0])[0]
-                    if len(index) == 1:
-                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[1], int(index),:]
-                    else:
-                        index = np.where(parent_vector[parents_crossover[1], :, :] == left_elements[i][1])[0]
-                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[1], int(index), :]
-                else:
-                    last_elements.append(left_elements[i])
-
-            # iterate over last free elements
-            if last_elements:
-                for i in range(np.size(last_elements, 0)):
-                    index = np.argwhere(np.isnan(child_vector[n_children, :, :]))[0][0]
-                    child_vector[n_children, int(index), :] = last_elements[i]
-
-            # evaluate the distance
             child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
 
             # go to the next child
             n_children = n_children + 1
 
-            # create the second child
-            child_vector[n_children, s0-1:sf, :] = parent_vector[parents_crossover[1], s0-1:sf, :]
+            child_vector[n_children, :, :] = pmx_crossover(parent_vector[parents_crossover[1], :, :],
+                                                           parent_vector[parents_crossover[0], :, :],
+                                                           s0, sf)
 
-            # save the remaining elements in a vector
-            left_elements = parent_vector[parents_crossover[1],
-                            np.concatenate(([i for i in range(0,s0-1)], [i for i in range(sf, n_cities)])), :]
-
-            # iterate the pending elements
-            #index = np.zeros(np.size(left_elements, axis=0))
-            last_elements = []
-            for i in range(np.size(left_elements,0)):
-
-                if left_elements[i]  not in parent_vector[parents_crossover[0], s0-1:sf, :]:
-                    index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i][0])[0]
-                    if len(index) == 1:
-                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index),:]
-                    else:
-                        index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i][1])[0]
-                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index), :]
-                else:
-                    last_elements.append(left_elements[i])
-
-            # iterate over last free elements
-            if last_elements:
-                for i in range(np.size(last_elements, 0)):
-                    index = np.argwhere(np.isnan(child_vector[n_children, :, :]))[0][0]
-                    child_vector[n_children, int(index), :] = last_elements[i]
-
-            # evaluate the distance
             child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
 
             # go to the next child
@@ -116,3 +71,27 @@ def crossover_function(parent_vector, parent_distance, n_cities):
             n_children = n_children + 1
 
     return child_vector, child_distance
+
+
+def pmx_crossover(parent1, parent2, s0, sf):
+
+    offspring = np.full((constants.n_cities, constants.dimension), np.nan)
+
+    offspring[s0 - 1:sf, :] = parent1[s0 - 1:sf, :]
+
+    left_candidates = []
+    for i in np.concatenate([np.arange(0, s0 - 1), np.arange(sf, constants.n_cities)]):
+        candidate = parent1[i, :]
+        if candidate not in parent2[s0 - 1:sf, :]:
+            array_index = np.where(candidate == parent2[:, :])[0]
+            unique, counts = np.unique(array_index, return_counts=True)
+            index = int(unique[np.where(counts > 1)])
+            offspring[index, :] = candidate
+        else:
+            left_candidates.append(candidate)
+
+    for candidate in left_candidates:
+        index = np.argwhere(np.isnan((offspring[:, :])))[0][0]
+        offspring[index, :] = candidate
+
+    return offspring
