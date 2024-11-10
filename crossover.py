@@ -14,7 +14,7 @@ def crossover_function(parent_vector, parent_distance, n_cities):
     """
 
     # initialize the variables
-    child_vector = np.zeros((constants.n_permutations, n_cities, constants.dimension))
+    child_vector = np.full((constants.n_permutations, n_cities, constants.dimension), np.nan)
     child_distance = np.zeros(constants.n_permutations)
     n_children = 0
     list_parents = [i for i in range(constants.n_permutations)] # list parents for crossover
@@ -48,15 +48,19 @@ def crossover_function(parent_vector, parent_distance, n_cities):
             last_elements = []
             for i in range(np.size(left_elements,0)):
                 if left_elements[i]  not in parent_vector[parents_crossover[1], s0-1:sf, :]:
-                    index = np.where(parent_vector[parents_crossover[1], :, :] == left_elements[i])[0][0]
-                    child_vector[n_children, int(index), :] = parent_vector[parents_crossover[1], int(index),:]
+                    index = np.where(parent_vector[parents_crossover[1], :, :] == left_elements[i][0])[0]
+                    if len(index) == 1:
+                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[1], int(index),:]
+                    else:
+                        index = np.where(parent_vector[parents_crossover[1], :, :] == left_elements[i][1])[0]
+                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[1], int(index), :]
                 else:
                     last_elements.append(left_elements[i])
 
             # iterate over last free elements
             if last_elements:
                 for i in range(np.size(last_elements, 0)):
-                    index = np.where(child_vector[n_children, :, :] == 0)[0][0]
+                    index = np.argwhere(np.isnan(child_vector[n_children, :, :]))[0][0]
                     child_vector[n_children, int(index), :] = last_elements[i]
 
             # evaluate the distance
@@ -76,16 +80,21 @@ def crossover_function(parent_vector, parent_distance, n_cities):
             #index = np.zeros(np.size(left_elements, axis=0))
             last_elements = []
             for i in range(np.size(left_elements,0)):
+
                 if left_elements[i]  not in parent_vector[parents_crossover[0], s0-1:sf, :]:
-                    index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i])[0][0]
-                    child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index),:]
+                    index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i][0])[0]
+                    if len(index) == 1:
+                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index),:]
+                    else:
+                        index = np.where(parent_vector[parents_crossover[0], :, :] == left_elements[i][1])[0]
+                        child_vector[n_children, int(index), :] = parent_vector[parents_crossover[0], int(index), :]
                 else:
                     last_elements.append(left_elements[i])
 
             # iterate over last free elements
             if last_elements:
                 for i in range(np.size(last_elements, 0)):
-                    index = np.where(child_vector[n_children, :, :] == 0)[0][0]
+                    index = np.argwhere(np.isnan(child_vector[n_children, :, :]))[0][0]
                     child_vector[n_children, int(index), :] = last_elements[i]
 
             # evaluate the distance

@@ -6,7 +6,7 @@ import numpy as np
 
 #  randon_vector_generator constants
 n_executions = 1  #number of executions
-n_cities = 10  #number of cities
+n_cities = 100  #number of cities
 dimension = 2      # space dimension
 square_size = 1  # size of square in where the vectors are located
 np.random.seed(2) #seed of the random function to avoid errors in the vector generator
@@ -26,4 +26,4 @@ pc = 1 # crossover probability
 pm = 1 # probability of mutation
 
 # termination condition
-n_generations = 4000 #number of generations
+n_generations = 20000 #number of generations

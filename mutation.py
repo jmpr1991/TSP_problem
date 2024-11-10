@@ -24,8 +24,8 @@ def mutation_function(child_vector, child_distance, n_cities):
         if mutation_prob_i <= constants.pm:
 
             # generate randomly to set of points
-            p0 = np.random.randint(0,n_cities - 2)
-            p1 = np.random.randint(p0, n_cities)
+            p0 = np.random.randint(0, n_cities)
+            p1 = np.random.randint(0, n_cities)
 
             # mutate the child
             child_mutated_vector[i, :, :] = child_vector[i, :, :]
