@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 def main():
 
-    #intialize variables for statistical analysis
+    # intialize variables for statistical analysis
     all_parent_vectors = np.zeros((constants.n_executions, constants.n_permutations, constants.n_cities, constants.dimension))
     all_parent_distances = np.zeros((constants.n_executions, constants.n_permutations))
     all_min_distances = []
@@ -20,11 +20,15 @@ def main():
     all_std_distances = []
     total_generations = []
 
+    # initialize success rate and success mean evaluations number parameters
+    success_rate = 0
+    pex = []
+
+    # create the initial vector with cities
+    vector = rand_vect.random_vector_generator_function(constants.n_cities)
+
     for execution_i in range(constants.n_executions):
         print("execution {}".format(execution_i+1), "on going")
-
-        # create the initial vector with cities
-        vector = rand_vect.random_vector_generator_function(constants.n_cities)
 
         # initialize the population shuffling the vector with cities
         parent_vector, parent_distance = initialization.initialization_function(vector, constants.n_cities)
@@ -58,12 +62,21 @@ def main():
 
             # compute termination condition if best individual does not change for a number of generations
             if min(new_parent_distance) == min(parent_distance):
+                # check convergence
                 termination_generation = termination_generation + 1
                 if termination_generation == constants.end_condition:
                     total_generations.append(number_generations)
                     parent_vector = new_parent_vector
                     parent_distance = new_parent_distance
                     break
+
+                #check if the optimum distance has been achieved (only for the square shaped cities)
+                if constants.square_cities:
+                    if min(new_parent_distance) <= constants.square_size * 4 + constants.delta:
+                        total_generations.append(number_generations)
+                        parent_vector = new_parent_vector
+                        parent_distance = new_parent_distance
+                        break
             else:
                 termination_generation = 0
 
@@ -81,12 +94,18 @@ def main():
 
         # compute success rate if square shaped city
         if constants.square_cities:
-            if all_min_distances[0,-1] <
+            if all_min_distances[execution_i][-1] <= 4 * constants.square_size + constants.delta:
+                success_rate = success_rate + 1
+                pex.append(number_generations)
 
-
-    print("min distance")
-    print(np.array(all_min_distances[0]))
-    print(np.array(all_mean_distances[0]))
+    # Success rate computation
+    print("\n Statistics:")
+    if constants.square_cities:
+        print("TE = ", success_rate/constants.n_executions * 100, "%")
+        if success_rate  == 0:
+            print("PEX = n/a")
+        else:
+            print("PEX = ", np.mean(pex), " +/-", np.std(pex))
 
     # VAMM computation
     vam = np.zeros(constants.n_executions)
@@ -96,10 +115,8 @@ def main():
     vamm = sum(vam)/constants.n_executions
     vamm_std = np.std(vam)
     print('VAMM = ', vamm, '+/-', vamm_std)
-    print('PEX = ', np.mean(total_generations), '+/-', np.std(total_generations))
+    print('Execution mean number to converge = ', np.mean(total_generations), '+/-', np.std(total_generations))
 
-    #plt.subplots(nrows=1, ncols=4)
-    #for i in np.linspace(0, np.size(all_min_distances), num=4, endpoint=True, dtype=int):
     min_index = np.argmin(all_parent_distances[0, :])
     plt.plot(np.append(all_parent_vectors[0, min_index, :, 0],all_parent_vectors[0, min_index, 0, 0]),
                     np.append(all_parent_vectors[0, min_index, :, 1], all_parent_vectors[0, min_index, 0, 1]))

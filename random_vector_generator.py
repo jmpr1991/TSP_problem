@@ -17,9 +17,9 @@ def random_vector_generator_function(n_points):
     if constants.square_cities:
 
         vector[0] = [0., 0.]
-        vector[1] = [0., 1.]
-        vector[2] = [1., 0.]
-        vector[3] = [1., 1.]
+        vector[1] = [0., constants.square_size]
+        vector[2] = [constants.square_size, 0.]
+        vector[3] = [constants.square_size, constants.square_size]
 
         for i in np.linspace(start=4, stop=n_points-1, num=n_points-4, dtype=int):
 
