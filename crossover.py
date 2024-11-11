@@ -38,15 +38,13 @@ def crossover_function(parent_vector, parent_distance, n_cities):
             sf = np.random.randint(s0 + 1, n_cities - 1)
 
             # create the first child
-            child_vector[n_children, s0-1:sf, :] = parent_vector[parents_crossover[0], s0-1:sf, :]
-
             child_vector[n_children, :, :] = pmx_crossover(parent_vector[parents_crossover[0], :, :],
                                                            parent_vector[parents_crossover[1], :, :],
                                                            s0, sf)
 
             child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
 
-            # go to the next child
+            # create the second child
             n_children = n_children + 1
 
             child_vector[n_children, :, :] = pmx_crossover(parent_vector[parents_crossover[1], :, :],
@@ -55,7 +53,7 @@ def crossover_function(parent_vector, parent_distance, n_cities):
 
             child_distance[n_children] = evaluation.evaluation_function(child_vector[n_children, :, :])
 
-            # go to the next child
+            # go to the next iteration
             n_children = n_children + 1
 
         # clone the parents if the following condition is met
@@ -74,15 +72,24 @@ def crossover_function(parent_vector, parent_distance, n_cities):
 
 
 def pmx_crossover(parent1, parent2, s0, sf):
+    """
+    This function implement the partial mapped crossover
+    :param parent1: first parent
+    :param parent2:second parent
+    :param s0: first edge of the segment
+    :param sf: last edge of the segment
+    :return: offspring: child solution
+    """
 
     offspring = np.full((constants.n_cities, constants.dimension), np.nan)
 
     offspring[s0 - 1:sf, :] = parent1[s0 - 1:sf, :]
 
+    # implementation of the partial mapped crossover
     left_candidates = []
     for i in np.concatenate([np.arange(0, s0 - 1), np.arange(sf, constants.n_cities)]):
         candidate = parent1[i, :]
-        if candidate not in parent2[s0 - 1:sf, :]:
+        if candidate.tolist() not in parent2[s0 - 1:sf, :].tolist():
             array_index = np.where(candidate == parent2[:, :])[0]
             unique, counts = np.unique(array_index, return_counts=True)
             index = int(unique[np.where(counts > 1)])

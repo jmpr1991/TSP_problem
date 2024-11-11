@@ -20,19 +20,17 @@ def parent_selection_function(individuals_vector, distance_vector, n_cities):
 
     # tournament loop
     for i in range(constants.n_tournaments):
-        # select 2 random individuals within the list and avoiding repetition
+        # select 2 random individuals together with their distance within the list, avoiding repetition
         tournament_individuals = np.zeros(constants.n_individuals, int)
+        tournament_distance = np.zeros(constants.n_individuals)
         for k in range(constants.n_individuals):
             tournament_individuals[k] = int(np.random.choice(list_parents))
+            tournament_distance[k] = distance_vector[tournament_individuals[k]]
             list_parents.remove(int(tournament_individuals[k]))
+
             # create a new list if list is empty. This is done because each individual has 2 tournaments
             if not list_parents:
                 list_parents = [i for i in range(constants.n_permutations)]
-
-        # Select the distance of those individuals
-        tournament_distance = np.zeros(constants.n_individuals)
-        for j in range(constants.n_individuals):
-            tournament_distance[j] = distance_vector[tournament_individuals[j]]
 
         # chose the individual with the smallest distance
         index = np.argmin(tournament_distance)

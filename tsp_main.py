@@ -21,6 +21,8 @@ def main():
     total_generations = []
 
     for execution_i in range(constants.n_executions):
+        print("execution {}".format(execution_i+1), "on going")
+
         # create the initial vector with cities
         vector = rand_vect.random_vector_generator_function(constants.n_cities)
 
@@ -54,10 +56,10 @@ def main():
             mean_distance.append(np.mean(new_parent_distance))
             std_distance.append(np.std(new_parent_distance))
 
-            # compute termination condition if best individual does not change for 100 generations
+            # compute termination condition if best individual does not change for a number of generations
             if min(new_parent_distance) == min(parent_distance):
                 termination_generation = termination_generation + 1
-                if termination_generation == 400:
+                if termination_generation == constants.end_condition:
                     total_generations.append(number_generations)
                     parent_vector = new_parent_vector
                     parent_distance = new_parent_distance
@@ -71,12 +73,15 @@ def main():
             parent_distance = new_parent_distance
 
         # save values for statistical analysis
-        print("execution {}".format(execution_i+1), "finalized")
         all_parent_vectors[execution_i,:,:,:] = parent_vector
         all_parent_distances[execution_i, :] = parent_distance
         all_min_distances.append(min_distance)
         all_mean_distances.append(mean_distance)
         all_std_distances.append(std_distance)
+
+        # compute success rate if square shaped city
+        if constants.square_cities:
+            if all_min_distances[0,-1] <
 
 
     print("min distance")
