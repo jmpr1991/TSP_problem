@@ -7,8 +7,8 @@ import numpy as np
 #  randon_vector_generator constants
 random_cities = False # random shaped city
 square_cities = True # square shaped city
-n_executions = 20  #number of executions
-n_cities = 30  #number of cities
+n_executions = 40  #number of executions
+n_cities = 40  #number of cities
 dimension = 2      # space dimension
 square_size = 1  # size of square in where the vectors are located
 np.random.seed(2) #seed of the random function to avoid errors in the vector generator
@@ -21,7 +21,7 @@ n_tournaments = n_permutations  # number of tournaments, lambda in the literatur
 n_individuals = 2  # number of individuals participating in the tournament
 
 # crossover
-pc = 0.4 # crossover probability
+pc = 0.8 # crossover probability
 
 # mutation
 pm = 1 # probability of mutation

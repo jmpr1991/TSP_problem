@@ -1,3 +1,5 @@
+from matplotlib.lines import lineStyles
+
 import constants
 import random_vector_generator as rand_vect
 import initialization
@@ -123,11 +125,11 @@ def main():
     plt.show()
 
     # print the convergence of the best individual
-    plt.plot(np.array(all_min_distances[0]), linewidth=0.5)
-    plt.plot(np.array(all_mean_distances[0]), linewidth=0.5)
-    plt.fill_between([i for i in range(np.size(np.array(all_mean_distances[0])))],
-                     np.array(all_mean_distances[0]) - np.array(all_std_distances[0]),
-                     np.array(all_mean_distances[0]) + np.array(all_std_distances[0]), alpha=0.3, label='error bar')
+    plt.plot(np.array(all_min_distances[0]), linewidth=0.6)
+    plt.plot(np.array(all_mean_distances[0]), linewidth=0.6, color='darkred')
+    plt.errorbar(y=np.array(all_mean_distances[0]), x= [i for i in range(len(np.array(all_mean_distances[0])))],
+                 yerr=np.array(all_std_distances[0]), errorevery=400, fmt='none', elinewidth=0.3, ecolor='darkred',
+                 capsize=5, ls='-.', label='error bar')
     plt.title('Progress curve of the best individual of each generation')
     plt.xlabel('Generation')
     plt.ylabel('Adaptation function (distance)')
