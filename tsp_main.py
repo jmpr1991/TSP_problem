@@ -1,5 +1,3 @@
-from matplotlib.lines import lineStyles
-
 import constants
 import random_vector_generator as rand_vect
 import initialization
@@ -7,6 +5,7 @@ import parent_selection
 import crossover
 import mutation
 import survival_elitism
+import statistics_plots
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -100,42 +99,9 @@ def main():
                 success_rate = success_rate + 1
                 pex.append(number_generations)
 
-    # Success rate computation
-    print("\n Statistics:")
-    if constants.square_cities:
-        print("TE = ", success_rate/constants.n_executions * 100, "%")
-        if success_rate  == 0:
-            print("PEX = n/a")
-        else:
-            print("PEX = ", np.mean(pex), " +/-", np.std(pex))
-
-    # VAMM computation
-    vam = np.zeros(constants.n_executions)
-    for i in range(constants.n_executions):
-        vam[i] = float(min(np.array(all_min_distances[i])))
-
-    vamm = sum(vam)/constants.n_executions
-    vamm_std = np.std(vam)
-    print('VAMM = ', vamm, '+/-', vamm_std)
-    print('Execution mean number to converge = ', np.mean(total_generations), '+/-', np.std(total_generations))
-
-    min_index = np.argmin(all_parent_distances[0, :])
-    plt.plot(np.append(all_parent_vectors[0, min_index, :, 0],all_parent_vectors[0, min_index, 0, 0]),
-                    np.append(all_parent_vectors[0, min_index, :, 1], all_parent_vectors[0, min_index, 0, 1]))
-    plt.show()
-
-    # print the convergence of the best individual
-    plt.plot(np.array(all_min_distances[0]), linewidth=0.6)
-    plt.plot(np.array(all_mean_distances[0]), linewidth=0.6, color='darkred')
-    plt.errorbar(y=np.array(all_mean_distances[0]), x= [i for i in range(len(np.array(all_mean_distances[0])))],
-                 yerr=np.array(all_std_distances[0]), errorevery=400, fmt='none', elinewidth=0.3, ecolor='darkred',
-                 capsize=5, ls='-.', label='error bar')
-    plt.title('Progress curve of the best individual of each generation')
-    plt.xlabel('Generation')
-    plt.ylabel('Adaptation function (distance)')
-    plt.legend(['best individual', 'population mean', 'error band'])
-    plt.show()
-
+    # print statistics and plots
+    statistics_plots.statistics(all_min_distances, total_generations, success_rate, pex)
+    statistics_plots.graphics(all_min_distances, all_mean_distances, all_std_distances, all_parent_vectors)
 
 
 if __name__ == "__main__":
