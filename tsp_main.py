@@ -8,12 +8,11 @@ import survival_elitism
 import statistics_plots
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 def main():
 
-    # intialize variables for statistical analysis
+    # initialize variables for statistical analysis
     all_parent_vectors = np.zeros((constants.n_executions, constants.n_permutations, constants.n_cities, constants.dimension))
     all_parent_distances = np.zeros((constants.n_executions, constants.n_permutations))
     all_min_distances = []
