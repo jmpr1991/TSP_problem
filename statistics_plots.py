@@ -30,7 +30,7 @@ def statistics(distances_vector, generation_vector, success_rate, pex):
     print('VAMM = ', vamm, '+/-', vamm_std)
     print('Execution mean number to converge = ', np.mean(generation_vector), '+/-', np.std(generation_vector))
 
-def graphics(min_distance_vector, mean_distance_vector, std_distance_vector, last_parent_vector):
+def graphics(min_distance_vector, mean_distance_vector, std_distance_vector, last_parent_vector, last_distance_vector):
     """
     This function creates 2 plots:
         1) the order of the cities to be visited for the first execution of the algorithm
@@ -41,10 +41,10 @@ def graphics(min_distance_vector, mean_distance_vector, std_distance_vector, las
     :param last_parent_vector: solution vector
     """
     # print computed optimal path
-    min_index = np.argmin(last_parent_vector[0, :])
+    min_index = np.argmin(last_distance_vector[0, :])
     plt.plot(np.append(last_parent_vector[0, min_index, :, 0], last_parent_vector[0, min_index, 0, 0]),
              np.append(last_parent_vector[0, min_index, :, 1], last_parent_vector[0, min_index, 0, 1]))
-    plt.title('Computed optimal path')
+    plt.title('Optimal path found for {} cities'.format(constants.n_cities))
     plt.xlabel('x')
     plt.ylabel('y')
     plt.show()
@@ -55,7 +55,8 @@ def graphics(min_distance_vector, mean_distance_vector, std_distance_vector, las
     plt.errorbar(y=np.array(mean_distance_vector[0]), x=[i for i in range(len(np.array(mean_distance_vector[0])))],
                  yerr=np.array(std_distance_vector[0]), errorevery=int(len(np.array(mean_distance_vector[0]))/10),
                  fmt='none', elinewidth=0.3, ecolor='darkred',capsize=5, ls='-.', label='error bar')
-    plt.title('Progress curve - best individual and population mean for each generation')
+    plt.title('{} individuals progress curve '
+              '\n Best individual and population mean for each generation'.format(constants.n_cities))
     plt.xlabel('Generation')
     plt.ylabel('Adaptation function (distance)')
     plt.legend(['best individual', 'population mean', 'error band'])

@@ -21,7 +21,7 @@ def main():
     all_std_distances = []
     total_generations = []
 
-    # initialize success rate and success mean evaluations number parameters
+    # initialize success rate and success mean evaluations number (pex) parameters
     success_rate = 0
     pex = []
 
@@ -31,7 +31,7 @@ def main():
     for execution_i in range(constants.n_executions):
         print("execution {}".format(execution_i+1), "on going")
 
-        # initialize the population shuffling the vector with cities
+        # initialize the population by shuffling the vector with the cities coordinates
         parent_vector, parent_distance = initialization.initialization_function(vector, constants.n_cities)
 
         # initialize variables
@@ -101,7 +101,7 @@ def main():
 
     # print statistics and plots
     statistics_plots.statistics(all_min_distances, total_generations, success_rate, pex)
-    statistics_plots.graphics(all_min_distances, all_mean_distances, all_std_distances, all_parent_vectors)
+    statistics_plots.graphics(all_min_distances, all_mean_distances, all_std_distances, all_parent_vectors, all_parent_distances)
 
 
 if __name__ == "__main__":
